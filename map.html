@@ -9,17 +9,13 @@
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
         <script>
             (function(root, factory) {
-                if (typeof define === 'function' && define.amd) {
-                    define(['leaflet'], factory);
-                } else if (typeof modules === 'object' && module.exports) {
-                    module.exports = factory(require('leaflet'));
-                } else {
-                    factory(L);
-                }
+                if (typeof define === 'function' && define.amd) {define(['leaflet'], factory);} 
+                else if (typeof modules === 'object' && module.exports) {module.exports = factory(require('leaflet'));} 
+                else {factory(L);}
             }(this, function(L) {
                 'use strict';
 
-                L.TileLayer.Provider = L.TileLayer.extend({
+            L.TileLayer.Provider = L.TileLayer.extend({
                     initialize: function(arg, options) {
                         var providers = L.TileLayer.Provider.providers;
                         var parts = arg.split('.');
