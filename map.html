@@ -148,7 +148,7 @@
                 zoomControl: !0
             });  
             
-          
+            /*----- MAP CONTENT DEFINITION -----*/
             var sense1 = ['AIMAG S202000224', 44.91128, 10.993324, 'https://level4.omnicon.it/customerGroups/2be92500-6f83-11ea-a1f6-1514b35bb24a/0583ad00-484d-11ec-80e3-1d188e083f24/dashboardGroups/0589ee90-484d-11ec-80e3-1d188e083f24/b7c94c90-4910-11ec-80e3-1d188e083f24?state=W3siaWQiOiJob21lIiwicGFyYW1zIjp7ImVudGl0eUlkIjp7ImlkIjoiMDJkN2FkODAtNGI4Ny0xMWVjLTgwZTMtMWQxODhlMDgzZjI0IiwiZW50aXR5VHlwZSI6IkRFVklDRSJ9LCJlbnRpdHlOYW1lIjoiQUlNQUcgUzIwMjAwMDIyNCIsImVudGl0eUxhYmVsIjoiQUlNQUcgUzIwMjAwMDIyNCJ9fSx7ImlkIjoiZGV0dGFnbGlvIiwicGFyYW1zIjp7ImVudGl0eUlkIjp7ImlkIjoiMDJkN2FkODAtNGI4Ny0xMWVjLTgwZTMtMWQxODhlMDgzZjI0IiwiZW50aXR5VHlwZSI6IkRFVklDRSJ9LCJlbnRpdHlOYW1lIjoiQUlNQUcgUzIwMjAwMDIyNCJ9fV0%253D'];
             var arraySense = [sense1, ];
             for (let i = 0; i < arraySense.length; i++) {
@@ -168,6 +168,8 @@
                     icon: markerIcon
                 }).addTo(map).bindPopup(popupContent);
             }
+            /*----- END OF MAP CONTENT DEFINITION -----*/
+            
             var defaultLayer = L.tileLayer.provider('OpenStreetMap.Mapnik').addTo(map);
             var baseLayers = {
                 'OpenStreetMap Default': defaultLayer,
