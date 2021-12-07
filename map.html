@@ -1,40 +1,19 @@
 <div class='card'>
     <div>
-        <!-- Leaflet style. REQUIRED! -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-        <style>
-            .body {
-                height: 100%;
-                margin-bottom: 20px;
-                padding-bottom: 30px;
-            }
-
-            .map {
-                height: 100%;
-                width: 100%;
-            }
-        </style>
-
+        <style>.body { height: 100%; margin-bottom: 20px; padding-bottom: 30px; } .map { height: 100%; width: 100%; } </style>
     </div>
     <div style="padding-bottom:10px">Mappa dispositivi</div>
     <div class="body">
-
-
         <div id="map" class="map"></div>
-
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-
         <script>
             (function(root, factory) {
                 if (typeof define === 'function' && define.amd) {
-                    // AMD. Register as an anonymous module.
                     define(['leaflet'], factory);
                 } else if (typeof modules === 'object' && module.exports) {
-                    // define a Common JS module that relies on 'leaflet'
                     module.exports = factory(require('leaflet'));
                 } else {
-                    // Assume Leaflet is loaded into global object L already
                     factory(L);
                 }
             }(this, function(L) {
@@ -43,22 +22,11 @@
                 L.TileLayer.Provider = L.TileLayer.extend({
                     initialize: function(arg, options) {
                         var providers = L.TileLayer.Provider.providers;
-
                         var parts = arg.split('.');
-
                         var providerName = parts[0];
                         var variantName = parts[1];
-
-                        if (!providers[providerName]) {
-                            throw 'No such provider (' + providerName + ')';
-                        }
-
-                        var provider = {
-                            url: providers[providerName].url,
-                            options: providers[providerName].options
-                        };
-
-                        // overwrite values in provider from variant.
+                        if (!providers[providerName]) {throw 'No such provider (' + providerName + ')';}
+                        var provider = {url: providers[providerName].url,options: providers[providerName].options};
                         if (variantName && 'variants' in providers[providerName]) {
                             if (!(variantName in providers[providerName].variants)) {
                                 throw 'No such variant of ' + providerName + ' (' + variantName + ')';
@@ -66,20 +34,13 @@
                             var variant = providers[providerName].variants[variantName];
                             var variantOptions;
                             if (typeof variant === 'string') {
-                                variantOptions = {
-                                    variant: variant
-                                };
-                            } else {
-                                variantOptions = variant.options;
-                            }
+                                variantOptions = {variant: variant};
+                            } else {variantOptions = variant.options;}
                             provider = {
                                 url: variant.url || provider.url,
                                 options: L.Util.extend({}, provider.options, variantOptions)
                             };
                         }
-
-                        // replace attribution placeholders with their values from toplevel provider attribution,
-                        // recursively
                         var attributionReplacer = function(attr) {
                             if (attr.indexOf('{attribution.') === -1) {
                                 return attr;
@@ -91,257 +52,122 @@
                             );
                         };
                         provider.options.attribution = attributionReplacer(provider.options.attribution);
-
-                        // Compute final options combining provider options with any user overrides
                         var layerOpts = L.Util.extend({}, provider.options, options);
                         L.TileLayer.prototype.initialize.call(this, provider.url, layerOpts);
                     }
                 });
 
-                //Definitions provider
                 L.TileLayer.Provider.providers = {
-                    OpenStreetMap: {
-                        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        options: {
-                            minZoom: 3,
-                            maxZoom: 19,
-                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                OpenStreetMap: {
+                    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    options: {
+                        minZoom: 3,
+                        maxZoom: 19,
+                        attribution:
+                            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    },
+                    variants: {
+                        Mapnik: {},
+                        DE: {url: 'https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',options: {maxZoom: 18}},
+                    }
+                },
+                GoogleMaps: {
+                    url: 'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+                    options: {
+                        minZoom: 3,
+                        maxZoom: 19,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                        attribution:'&copy; <a href="https://about.google/brand-resource-center/products-and-services/geo-guidelines/">Google Maps</a>'
+                    },
+                    variants: {
+                        Streets: {
+                            url: 'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+                            options: {maxZoom: 19}
                         },
-                        variants: {
-                            Mapnik: {},
-                            DE: {
-                                url: 'https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',
-                                options: {
-                                    maxZoom: 18
-                                }
-                            },
-                            CH: {
-                                url: 'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png',
-                                options: {
-                                    maxZoom: 18,
-                                    bounds: [
-                                        [45, 5],
-                                        [48, 11]
-                                    ]
-                                }
-                            },
-                            France: {
-                                url: 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
-                                options: {
-                                    maxZoom: 20,
-                                    attribution: '&copy; OpenStreetMap France | {attribution.OpenStreetMap}'
-                                }
-                            },
-                            HOT: {
-                                url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-                                options: {
-                                    attribution: '{attribution.OpenStreetMap}, ' +
-                                        'Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> ' +
-                                        'hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
-                                }
-                            },
-                            BZH: {
-                                url: 'https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png',
-                                options: {
-                                    attribution: '{attribution.OpenStreetMap}, Tiles courtesy of <a href="http://www.openstreetmap.bzh/" target="_blank">Breton OpenStreetMap Team</a>',
-                                    bounds: [
-                                        [46.2, -5.5],
-                                        [50, 0.7]
-                                    ]
-                                }
-                            }
-                        }
-                    },
-
-                    GoogleMaps: {
-                        url: 'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
-                        options: {
-                            minZoom: 3,
-                            maxZoom: 19,
-                            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-                            attribution: '&copy; <a href="https://about.google/brand-resource-center/products-and-services/geo-guidelines/">Google Maps</a>'
+                        Hybrid: {
+                            url: 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+                            options: {maxZoom: 19}
                         },
-                        variants: {
-                            Streets: {
-                                url: 'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
-                                options: {
-                                    maxZoom: 19
-                                }
-                            },
-                            Hybrid: {
-                                url: 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
-                                options: {
-                                    maxZoom: 19
-                                }
-                            },
-                            Satellite: {
-                                url: 'http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
-                                options: {
-                                    maxZoom: 19
-                                }
-                            },
-
-                        }
-                    },
-
-                    Stamen: {
-                        url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}{r}.{ext}',
-                        options: {
-                            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
-                                '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' +
-                                'Map data {attribution.OpenStreetMap}',
-                            subdomains: 'abcd',
-                            minZoom: 0,
-                            maxZoom: 20,
-                            variant: 'toner',
-                            ext: 'png'
+                        Satellite: {
+                            url: 'http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+                            options: {maxZoom: 19}
                         },
-                        variants: {
-                            Toner: 'toner',
-                            TonerBackground: 'toner-background',
-                            TonerHybrid: 'toner-hybrid',
-                            TonerLines: 'toner-lines',
-                            TonerLabels: 'toner-labels',
-                            TonerLite: 'toner-lite',
-                            Watercolor: {
-                                url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}.{ext}',
-                                options: {
-                                    variant: 'watercolor',
-                                    ext: 'jpg',
-                                    minZoom: 1,
-                                    maxZoom: 16
-                                }
-                            },
-                            Terrain: {
-                                options: {
-                                    variant: 'terrain',
-                                    minZoom: 0,
-                                    maxZoom: 18
-                                }
-                            },
-                            TerrainBackground: {
-                                options: {
-                                    variant: 'terrain-background',
-                                    minZoom: 0,
-                                    maxZoom: 18
-                                }
-                            },
-                            TerrainLabels: {
-                                options: {
-                                    variant: 'terrain-labels',
-                                    minZoom: 0,
-                                    maxZoom: 18
-                                }
-                            },
-                            TopOSMRelief: {
-                                url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}.{ext}',
-                                options: {
-                                    variant: 'toposm-color-relief',
-                                    ext: 'jpg',
-                                    bounds: [
-                                        [22, -132],
-                                        [51, -56]
-                                    ]
-                                }
-                            },
-                            TopOSMFeatures: {
-                                options: {
-                                    variant: 'toposm-features',
-                                    bounds: [
-                                        [22, -132],
-                                        [51, -56]
-                                    ],
-                                    opacity: 0.9
-                                }
-                            }
-                        }
+
+                    }
+                },
+                Stamen: {
+                    url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}{r}.{ext}',
+                    options: {
+                        attribution:
+                            'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
+                            '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' +
+                            'Map data {attribution.OpenStreetMap}',
+                        subdomains: 'abcd',
+                        minZoom: 0,
+                        maxZoom: 20,
+                        variant: 'toner',
+                        ext: 'png'
                     },
-
-                    WorldImagery: {
-                        options: {
-                            variant: 'World_Imagery',
-                            attribution: '{attribution.Esri} &mdash; ' +
-                                'Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-                        }
+                    variants: {Toner: 'toner',}
+                },
+                OpenWeatherMap: {
+                    url: 'http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png?appid={apiKey}',
+                    options: {
+                        minZoom: 3,
+                        maxZoom: 19,
+                        attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
+                        apiKey: '0e1e87f7dad2414965f76a3c9bf1f892',
+                        opacity: 0.5
                     },
-
-                    OpenWeatherMap: {
-                        url: 'http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png?appid={apiKey}',
-                        options: {
-                            minZoom: 3,
-                            maxZoom: 19,
-                            attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
-                            apiKey: '0e1e87f7dad2414965f76a3c9bf1f892',
-                            opacity: 0.5
-                        },
-                        variants: {
-                            Clouds: 'clouds',
-                            CloudsClassic: 'clouds_cls',
-                            Precipitation: 'precipitation',
-                            PrecipitationClassic: 'precipitation_cls',
-                            Rain: 'rain',
-                            RainClassic: 'rain_cls',
-                            Pressure: 'pressure',
-                            PressureContour: 'pressure_cntr',
-                            Wind: 'wind',
-                            Temperature: 'temp',
-                            Snow: 'snow'
-                        }
-                    },
-
-
-                };
-
+                    variants: {
+                        Clouds: 'clouds',
+                        CloudsClassic: 'clouds_cls',
+                        Precipitation: 'precipitation',
+                        PrecipitationClassic: 'precipitation_cls',
+                        Rain: 'rain',
+                        RainClassic: 'rain_cls',
+                        Pressure: 'pressure',
+                        PressureContour: 'pressure_cntr',
+                        Wind: 'wind',
+                        Temperature: 'temp',
+                        Snow: 'snow'
+                    }
+                },
+            };
                 L.tileLayer.provider = function(provider, options) {
                     return new L.TileLayer.Provider(provider, options);
                 };
-
                 return L;
             }));
         </script>
 
         <script>
-            //Inizializza l'oggetto mappa
             var map = L.map("map", {
                 center: [44.91128, 10.993324],
                 zoom: 9,
                 zoomControl: !0
-            });
-
-
+            });  
+            
+          
             var sense1 = ['AIMAG S202000224', 44.91128, 10.993324, 'https://level4.omnicon.it/customerGroups/2be92500-6f83-11ea-a1f6-1514b35bb24a/0583ad00-484d-11ec-80e3-1d188e083f24/dashboardGroups/0589ee90-484d-11ec-80e3-1d188e083f24/b7c94c90-4910-11ec-80e3-1d188e083f24?state=W3siaWQiOiJob21lIiwicGFyYW1zIjp7ImVudGl0eUlkIjp7ImlkIjoiMDJkN2FkODAtNGI4Ny0xMWVjLTgwZTMtMWQxODhlMDgzZjI0IiwiZW50aXR5VHlwZSI6IkRFVklDRSJ9LCJlbnRpdHlOYW1lIjoiQUlNQUcgUzIwMjAwMDIyNCIsImVudGl0eUxhYmVsIjoiQUlNQUcgUzIwMjAwMDIyNCJ9fSx7ImlkIjoiZGV0dGFnbGlvIiwicGFyYW1zIjp7ImVudGl0eUlkIjp7ImlkIjoiMDJkN2FkODAtNGI4Ny0xMWVjLTgwZTMtMWQxODhlMDgzZjI0IiwiZW50aXR5VHlwZSI6IkRFVklDRSJ9LCJlbnRpdHlOYW1lIjoiQUlNQUcgUzIwMjAwMDIyNCJ9fV0%253D'];
-
             var arraySense = [sense1, ];
-
             for (let i = 0; i < arraySense.length; i++) {
-
-                //Contenuto del popup
                 var popupContent = "<b>" + (arraySense[i])[0] + "</b><br><b>Latitudine: </b>" + (arraySense[i])[1] + "<br><b>Longitudine: </b>" + (arraySense[i])[2];
-
-                //Link al dettaglio
                 if ((arraySense[i])[3] != '')
                     popupContent += "<br><a href='" + (arraySense[i])[3] + "'>Pagina Dettaglio</a>";
-
-                //Imposta l'icona
                 var markerIcon = L.icon({
                     iconUrl: 'https://i.ibb.co/NxXtL8W/download.png',
                     shadowUrl: 'https://i.ibb.co/3NWBDFG/download.png',
-                    iconSize: [30, 35], // size of the icon
+                    iconSize: [30, 35], 
                     shadowSize: [30, 32],
                     iconAnchor: [15, 34],
                     shadowAnchor: [2, 30],
                     popupAnchor: [0, -38]
                 });
-
                 var marker = L.marker([(arraySense[i])[1], (arraySense[i])[2]], {
                     icon: markerIcon
                 }).addTo(map).bindPopup(popupContent);
-
             }
-
-
-
-
             var defaultLayer = L.tileLayer.provider('OpenStreetMap.Mapnik').addTo(map);
             var baseLayers = {
                 'OpenStreetMap Default': defaultLayer,
@@ -361,16 +187,14 @@
                 'Temperature': L.tileLayer.provider('OpenWeatherMap.Temperature'),
                 'Snow': L.tileLayer.provider('OpenWeatherMap.Snow'),
             };
-
+            
             L.control.layers(baseLayers, overlayLayers, "Test", {
                 collapsed: false
             }).addTo(map);
-
-            // resize layers control to fit into view.
+            
             function resizeLayerControl() {
                 var layerControlHeight = document.body.clientHeight - (10 + 50);
                 var layerControl = document.getElementsByClassName('leaflet-control-layers-expanded')[0];
-
                 layerControl.style.overflowY = 'auto';
                 layerControl.style.maxHeight = layerControlHeight + 'px';
             }
