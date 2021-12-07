@@ -1,4 +1,4 @@
-<script>
+
             (function(root, factory) {
                 if (typeof define === 'function' && define.amd) {
                     define(['leaflet'], factory);
@@ -130,4 +130,3 @@
                 };
                 return L;
             }));
-        </script>
