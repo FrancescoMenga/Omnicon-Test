@@ -33,6 +33,27 @@
                         },
                     }
                 },
+                CartoDB: {
+                    url: 'https://{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}{r}.png',
+                    options: {
+                        attribution: '{attribution.OpenStreetMap} &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                        subdomains: 'abcd',
+                        maxZoom: 20,
+                        variant: 'light_all'
+                    },
+                    variants: {
+                        Positron: 'light_all',
+                        PositronNoLabels: 'light_nolabels',
+                        PositronOnlyLabels: 'light_only_labels',
+                        DarkMatter: 'dark_all',
+                        DarkMatterNoLabels: 'dark_nolabels',
+                        DarkMatterOnlyLabels: 'dark_only_labels',
+                        Voyager: 'rastertiles/voyager',
+                        VoyagerNoLabels: 'rastertiles/voyager_nolabels',
+                        VoyagerOnlyLabels: 'rastertiles/voyager_only_labels',
+                        VoyagerLabelsUnder: 'rastertiles/voyager_labels_under'
+                    }
+                },
                 Stamen: {
                     url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/{variant}/{z}/{x}/{y}{r}.{ext}',
                     options: {
@@ -99,6 +120,7 @@
                 'Google Maps': L.tileLayer.provider('GoogleMaps.Streets'),
                 'Google Hybrid': L.tileLayer.provider('GoogleMaps.Hybrid'),
                 'Google Satellite': L.tileLayer.provider('GoogleMaps.Satellite'),
+                'CartoDB DarkMatter': L.tileLayer.provider('CartoDB.DarkMatter'),
                 'Stamen Toner': L.tileLayer.provider('Stamen.Toner'),
             };
             var overlayLayers = {
