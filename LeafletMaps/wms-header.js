@@ -1,3 +1,4 @@
+console.log("Library read ok");
 import * as Util from "https://cdn.jsdelivr.net/gh/Leaflet/Leaflet@main/src/core/Util.js";
 import * as DomUtil from "https://cdn.jsdelivr.net/gh/Leaflet/Leaflet@main/src/dom/DomUtil.js";
 
@@ -88,3 +89,6 @@ L.TileLayer.WMSHeader = L.TileLayer.WMS.extend({
 L.TileLayer.wmsHeader = function (url, options, headers, abort) {
   return new L.TileLayer.WMSHeader(url, options, headers, abort);
 };
+
+
+console.log("Library read end OKOK");
