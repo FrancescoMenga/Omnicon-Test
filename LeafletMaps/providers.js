@@ -44,3 +44,59 @@ var defaultLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 		variant: 'toner',
 		ext: 'png'
     });
+
+var clouds = L.tileLayer('http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png?appid={apiKey}',{
+        maxZoom: 19,
+		attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
+		apiKey: '0e1e87f7dad2414965f76a3c9bf1f892',
+		opacity: 0.5,
+		variant: 'clouds'
+    });
+		
+	var rain = L.tileLayer('http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png?appid={apiKey}',{
+        maxZoom: 19,
+		attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
+		apiKey: '0e1e87f7dad2414965f76a3c9bf1f892',
+		opacity: 0.5,
+		variant: 'precipitation'
+    });
+    
+    var pressure = L.tileLayer('http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png?appid={apiKey}',{
+        maxZoom: 19,
+		attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
+		apiKey: '0e1e87f7dad2414965f76a3c9bf1f892',
+		opacity: 0.5,
+		variant: 'pressure'
+    });
+    
+    var pressureContour = L.tileLayer('http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png?appid={apiKey}',{
+        maxZoom: 19,
+		attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
+		apiKey: '0e1e87f7dad2414965f76a3c9bf1f892',
+		opacity: 0.5,
+		variant: 'pressure_cntr'
+    });
+    
+    var wind = L.tileLayer('http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png?appid={apiKey}',{
+        maxZoom: 19,
+		attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
+		apiKey: '0e1e87f7dad2414965f76a3c9bf1f892',
+		opacity: 0.5,
+		variant: 'wind'
+    });
+    
+    var temperature = L.tileLayer('http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png?appid={apiKey}',{
+        maxZoom: 19,
+		attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
+		apiKey: '0e1e87f7dad2414965f76a3c9bf1f892',
+		opacity: 0.5,
+		variant: 'temp'
+    });
+    
+    var snow = L.tileLayer('http://{s}.tile.openweathermap.org/map/{variant}/{z}/{x}/{y}.png?appid={apiKey}',{
+        maxZoom: 19,
+		attribution: 'Map data &copy; <a href="http://openweathermap.org">OpenWeatherMap</a>',
+		apiKey: '0e1e87f7dad2414965f76a3c9bf1f892',
+		opacity: 0.5,
+		variant: 'snow'
+    });
